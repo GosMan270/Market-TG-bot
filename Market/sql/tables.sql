@@ -1,15 +1,28 @@
+CREATE TABLE IF NOT EXISTS users_basket (
+    id BIGINT PRIMARY KEY,
+    role INTEGER NOT NULL DEFAULT 0,
+    product INTEGER NOT NULL DEFAULT 0,
+    quantity BIGINT NOT NULL DEFAULT 0
+);
+
+
 CREATE TABLE IF NOT EXISTS users (
     id BIGINT PRIMARY KEY,
-    sub_type INTEGER NOT NULL DEFAULT 0,
-    sub_time REAL NOT NULL DEFAULT 0,
     role INTEGER NOT NULL DEFAULT 0,
-    setting_model INTEGER NOT NULL DEFAULT 12,
-    credits INTEGER NOT NULL DEFAULT 10,
-    next_credits_time REAL NOT NULL DEFAULT 0,
-    setting_system TEXT NOT NULL DEFAULT '',
-    setting_temperature FLOAT NOT NULL DEFAULT 1.0,
-    setting_max_tokens INTEGER NOT NULL DEFAULT 2048,
-    ban INTEGER DEFAULT 0,
-    balance INTEGER DEFAULT 0
+    address TEXT
 );
+
+
+CREATE TABLE IF NOT EXISTS bulki (
+    id BIGINT PRIMARY KEY,
+    name TEXT NOT NULL DEFAULT 'None',
+    description TEXT NOT NULL DEFAULT 'None',
+    price INTEGER NOT NULL DEFAULT 1,
+    calories INTEGER NOT NULL DEFAULT 1,
+    image TEXT NOT NULL DEFAULT 'None',
+    category TEXT NOT NULL DEFAULT 'None',
+    subcategories TEXT NOT NULL DEFAULT 'None'
+);
+
+
 
