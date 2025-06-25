@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS basket (
 CREATE TABLE IF NOT EXISTS users (
     id BIGINT PRIMARY KEY,
     role INTEGER NOT NULL DEFAULT 0,
-    address TEXT
+    address TEXT,
+    phone TEXT
 );
 
 

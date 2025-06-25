@@ -131,12 +131,10 @@ async def get_amount(message: Message, state: FSMContext):
     data = await state.get_data()
     product_id = data["product_id"]
     product_info = await DATABASE.get_cb_for_id(int(product_id), "catalog")
+    basket_info = await DATABASE.get_cb_for_id(message.from_user.id, "basket")
     amount = message.text
-    print(amount)
-    res = await controller.get_add_product_message(product_info, int(amount))
-    print(res)
-    if res[2] == True:
-        await DATABASE.add_product(int(message.from_user.id), int(product_id), int(amount))
+    res = await controller.get_add_product_message(product_info, amount, basket_info, message.from_user.id)
+    if res[2]:
         await message.answer(res[1], reply_markup=res[0], parse_mode="Markdown")
         await state.clear()
     else:

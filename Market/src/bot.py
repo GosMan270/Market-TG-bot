@@ -9,6 +9,10 @@ from dotenv import load_dotenv
 # from router.basket import BASKET
 from src.router.router.catalog import router as catalog_router
 from src.router.router.basket import router as basket_router
+from src.router.router.payment import router as payment_router
+from src.router.controller.payment import router as payment_router_2
+
+
 from src.base.database import DATABASE
 from src.base.utils import check_sub
 
@@ -26,6 +30,11 @@ class Bot:
 		self.channel_id = int(os.getenv('channel_id'))
 		self.group_id = int(os.getenv('group_id'))
 		self.link_channel = str(os.getenv('link_channel'))
+		self.yoomoney_access_token = str(os.getenv('yoomoney_access_token'))
+		self.yoomoney_receiver = str(os.getenv('yoomoney_receiver'))
+		self.yoomoney_scopes = str(os.getenv('yoomoney_scopes'))
+		self.yoomoney_redirect_url = str(os.getenv('yoomoney_redirect_url'))
+		self.yoomoney_client_id = str(os.getenv('yoomoney_client_id'))
 		
 		self.bot: Bot = None
 		self.dispatch: Dispatcher = None
@@ -45,6 +54,8 @@ class Bot:
 		
 		self.dispatch.include_router(basket_router)
 		self.dispatch.include_router(catalog_router)
+		self.dispatch.include_router(payment_router)
+		self.dispatch.include_router(payment_router_2)
 		self.register_handlers()
 		
 		await self.dispatch.start_polling(self.bot)

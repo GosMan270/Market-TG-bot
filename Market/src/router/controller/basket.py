@@ -43,30 +43,7 @@ async def basket_menu(user_id, kb=None):
 	
 	res.append(text)
 	res.append(kb)
-	return res
-
-
-async def get_add_product_message(product_info, amount: int):
-	res = []
-	kb = InlineKeyboardMarkup(inline_keyboard=[
-		[
-			(InlineKeyboardButton(text="Каталог", callback_data=f"catalog")),
-		],
-	])
-	res.append(kb)
-	
-	try:
-		amount = int(amount)
-	except ValueError:
-		reply_text = "Введите корректное количество, например 2."
-		success = False
-		res.append(reply_text)
-		res.append(success)
-		return res
-	
-	text = (f"Добавлено {amount} *{product_info[0]['name']}* в корзину!✅")
-	res.append(text)
-	res.append(True)
+	res.append(summa)
 	return res
 
 

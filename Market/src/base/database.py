@@ -43,6 +43,19 @@ class ProjectDatabase(Database):
     
     async def delite_product(self, user_id, product: int):
         await self.execute_query("DELETE FROM basket WHERE id = $1 AND product = $2", (user_id, product,))
-        
-        
+    
+    
+    async def update_product(self, user_id, product_id, amount):
+        await self.execute_query("UPDATE basket SET quantity = quantity + $3 WHERE id = $1   AND product = $2 ", (user_id, product_id, amount))
+    
+    
+    
+    async def new_user(self, user_id: int, address: int, phone: int):
+        await self.execute_query("INSERT INTO users(id, address, phone) VALUES ($1, $2, $3)",
+                                 (user_id, address, phone,))
+    
+    
+    async def update_user_info(self, user_id):
+        await self.execute_query("UPDATE basket SET pay = $1 WHERE id = $2", (1, user_id))
+
 DATABASE = ProjectDatabase()
