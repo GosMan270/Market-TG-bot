@@ -1,3 +1,6 @@
+from aiogram.types import CallbackQuery
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+
 from src.base.database import DATABASE
 # from src.router.view.catalog import build_keyboard, product_nav_keyboard, product_caption
 
@@ -26,3 +29,5 @@ async def get_subcategories(category):
 async def get_products_by_subcategory(subcategory):
     catalog_info = await DATABASE.get_catalog()
     return [row for row in catalog_info if row[8] == subcategory]
+
+

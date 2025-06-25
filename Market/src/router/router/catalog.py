@@ -4,6 +4,14 @@ from aiogram.filters.command import Command
 
 import src.router.controller.catalog as controller
 from src.router.view.catalog import build_category_keyboard, build_subcategory_keyboard, product_nav_keyboard, product_caption
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
+
+from src.base.database import DATABASE
+
+class States(StatesGroup):
+    meaning = State()
+    
 router = Router()
 
 
@@ -14,7 +22,6 @@ async def open_menu(message: Message):
             (InlineKeyboardButton(text="Каталог", callback_data=f"catalog")),
             (InlineKeyboardButton(text="Корзина", callback_data=f"basket"))
          ],
-        
     ])
     await message.answer("*Меню:*", reply_markup=kb, parse_mode="Markdown")
 
@@ -26,7 +33,6 @@ async def open_menu_callback(callback: CallbackQuery):
             (InlineKeyboardButton(text="Каталог", callback_data=f"catalog")),
             (InlineKeyboardButton(text="Корзина", callback_data=f"basket"))
          ],
-
     ])
     await callback.message.edit_text("*Меню:*", reply_markup=kb, parse_mode="Markdown")
     await callback.answer()
@@ -82,7 +88,7 @@ async def show_products_in_subcategory(callback: CallbackQuery):
     if not products:
         await callback.answer("В этой подкатегории нет товаров!", show_alert=True)
         return
-    kb = product_nav_keyboard(subcategory, 0, len(products))
+    kb = product_nav_keyboard(subcategory, 0, len(products), products[0])
     await callback.message.delete()
     await callback.message.answer_photo(
         photo=products[0][5],
@@ -100,7 +106,7 @@ async def products_pagination(callback: CallbackQuery):
     subcategory = subcategory.replace("_", " ")
     page = int(page)
     products = await controller.get_products_by_subcategory(subcategory)
-    kb = product_nav_keyboard(subcategory, page, len(products))
+    kb = product_nav_keyboard(subcategory, page, len(products), products[page])
     await callback.message.delete()
     await callback.message.answer_photo(
         photo=products[page][5],
@@ -109,3 +115,31 @@ async def products_pagination(callback: CallbackQuery):
         parse_mode="HTML"
     )
     await callback.answer()
+    
+
+@router.callback_query(F.data.startswith("add_basket_"))
+async def add_basket(callback: CallbackQuery, state: FSMContext):
+    product_id = callback.data.rsplit("add_basket_", 1)[1]
+    await callback.message.delete()
+    await callback.message.answer("*Введите количество выпечки к приобретению:*", parse_mode="Markdown")
+    await state.update_data(product_id=product_id)
+    await state.set_state(States.meaning)
+
+
+@router.message(States.meaning)
+async def get_amount(message: Message, state: FSMContext):
+    data = await state.get_data()
+    product_id = data["product_id"]
+    product_info = await DATABASE.get_cb_for_id(int(product_id), "catalog")
+    amount = message.text
+    print(amount)
+    res = await controller.get_add_product_message(product_info, int(amount))
+    print(res)
+    if res[2] == True:
+        await DATABASE.add_product(int(message.from_user.id), int(product_id), int(amount))
+        await message.answer(res[1], reply_markup=res[0], parse_mode="Markdown")
+        await state.clear()
+    else:
+        await message.answer(res[1], reply_markup=res[0], parse_mode="Markdown")
+        
+        

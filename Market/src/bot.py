@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 #
 # from router.basket import BASKET
 from src.router.router.catalog import router as catalog_router
+from src.router.router.basket import router as basket_router
 from src.base.database import DATABASE
 from src.base.utils import check_sub
 
@@ -42,7 +43,7 @@ class Bot:
 		self.bot = aiogram.Bot(self.tg_bot_key)
 		self.dispatch = aiogram.Dispatcher()
 		
-		# self.dispatch.include_router(BASKET.router)
+		self.dispatch.include_router(basket_router)
 		self.dispatch.include_router(catalog_router)
 		self.register_handlers()
 		
