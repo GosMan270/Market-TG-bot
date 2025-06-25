@@ -5,7 +5,7 @@ async def check_sub(bot: Bot, user_id: int, channel_id: int, group_id: int, link
     try:
         member = await bot.get_chat_member(channel_id, user_id)
         if member.status in ['member', 'creator', 'administrator']:
-            return 'Добро пожаловать!\nПропишите - /catalog для просмотра товаров.'
+            return 'Добро пожаловать!\nПропишите - /menu.'
         else:
             return f'Вы не подписаны на канал!\nПодпишитесь: {link_channel} для доступа к магазину'
     except TelegramForbiddenError:

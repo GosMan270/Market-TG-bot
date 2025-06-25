@@ -7,9 +7,9 @@ from aiogram.filters import Command
 from dotenv import load_dotenv
 #
 # from router.basket import BASKET
-# from router.catalog import CATALOG
-from .base.database import DATABASE
-from .base.utils import check_sub
+from src.router.router.catalog import router as catalog_router
+from src.base.database import DATABASE
+from src.base.utils import check_sub
 
 
 class Bot:
@@ -40,10 +40,10 @@ class Bot:
 		)
 		
 		self.bot = aiogram.Bot(self.tg_bot_key)
-		self.dispatch = Dispatcher()
+		self.dispatch = aiogram.Dispatcher()
 		
 		# self.dispatch.include_router(BASKET.router)
-		# self.dispatch.include_router(CATALOG.router)
+		self.dispatch.include_router(catalog_router)
 		self.register_handlers()
 		
 		await self.dispatch.start_polling(self.bot)
