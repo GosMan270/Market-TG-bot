@@ -5,7 +5,7 @@ class Database:
     def __init__(self):
         self.connection: asyncpg.Connection = ...
 
-
+        
     async def open_connection(self, host: str, port: int, user: str, password: str, database: str) -> None:
         self.connection = await asyncpg.connect(host=host, port=port, user=user, password=password, database=database)
 
@@ -22,6 +22,7 @@ class Database:
 
     async def execute_get_query(self, query: str, params: tuple = None):
         return await self.connection.fetch(query, *(params or ()))
+    
 
 
 class ProjectDatabase(Database):
@@ -58,4 +59,18 @@ class ProjectDatabase(Database):
     async def update_user_info(self, user_id):
         await self.execute_query("UPDATE basket SET pay = $1 WHERE id = $2", (1, user_id))
 
+    
+
+
+
 DATABASE = ProjectDatabase()
+
+
+
+
+
+
+
+
+
+

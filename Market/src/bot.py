@@ -22,20 +22,24 @@ class Bot:
 		dotenv_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'run', 'config.env')
 		load_dotenv(dotenv_path)
 		self.tg_bot_key = str(os.getenv('tg_bot_key'))
+		
 		self.db_host = str(os.getenv('database_host'))
 		self.db_port = str(os.getenv('database_port'))
 		self.db_user = str(os.getenv('database_user'))
 		self.db_password = str(os.getenv('database_password'))
 		self.db_database = str(os.getenv('database_database'))
+		
 		self.channel_id = int(os.getenv('channel_id'))
 		self.group_id = int(os.getenv('group_id'))
 		self.link_channel = str(os.getenv('link_channel'))
+		
 		self.yoomoney_access_token = str(os.getenv('yoomoney_access_token'))
 		self.yoomoney_receiver = str(os.getenv('yoomoney_receiver'))
 		self.yoomoney_scopes = str(os.getenv('yoomoney_scopes'))
 		self.yoomoney_redirect_url = str(os.getenv('yoomoney_redirect_url'))
 		self.yoomoney_client_id = str(os.getenv('yoomoney_client_id'))
 		
+		self.exel_name = str(os.getenv('exel_name'))
 		self.bot: Bot = None
 		self.dispatch: Dispatcher = None
 		self._shutdown_event = asyncio.Event()

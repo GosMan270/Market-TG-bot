@@ -49,7 +49,7 @@ async def check_payment_handler(callback: CallbackQuery):
 
     await callback.answer("⏳ Проверяем статус вашего платежа...")
 
-    if await controller.check_yoomoney_payment(label):
+    if await controller.check_yoomoney_payment(label, callback.from_user.id):
         try:
             sum_from_label = float(label.split("_")[2])
         except Exception:

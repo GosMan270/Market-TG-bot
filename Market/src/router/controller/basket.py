@@ -19,15 +19,21 @@ async def basket_menu(user_id, kb=None):
 	for i, item in enumerate(basket_info):
 		product_id = item['product']
 		quantity = item['quantity']
-		product_info = await DATABASE.get_cb_for_id(product_id, "catalog")
-		if product_info:
-			prod = product_info[0]
-			name = prod['name']
-			price = prod['price']
-			text += f"{i + 1}. {name} - {quantity} шт. - {int(price) * int(quantity)} руб.\n\n"
-			summa += int(price) * int(quantity)
+		if item['pay'] != 1:
+			product_info = await DATABASE.get_cb_for_id(product_id, "catalog")
+			if product_info:
+				prod = product_info[0]
+				name = prod['name']
+				price = prod['price']
+				text += f"{i + 1}. {name} - {quantity} шт. - {int(price) * int(quantity)} руб.\n\n"
+				summa += int(price) * int(quantity)
+			else:
+				text += f"{i + 1}. Товар не найден (id {product_id})\n"
 		else:
-			text += f"{i + 1}. Товар не найден (id {product_id})\n"
+			continue
+		
+		
+		
 	text += f"\n*Итого: {summa} руб.*"
 	
 	kb = InlineKeyboardMarkup(inline_keyboard=[

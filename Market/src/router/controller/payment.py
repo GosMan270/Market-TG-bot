@@ -4,18 +4,24 @@ import logging
 from decimal import Decimal
 from urllib.parse import urlencode, quote
 import aiohttp
+import psycopg2
+from openpyxl import load_workbook
 
-from aiogram import Router, F
-from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, Message
-from aiogram.filters import Command
+from aiogram import Router
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.fsm.context import FSMContext
 from dotenv import load_dotenv
 
 from src.base.database import DATABASE
 
+
+
+
 router = Router()
 logger = logging.getLogger(__name__)
+
+
+
+
 
 class SetState(StatesGroup):
     sum = State()
@@ -61,10 +67,12 @@ def create_quickpay_link(amount, user_id):
     print("yoomoney_scopes =", yoomoney_scopes)
 
     return url, label
-    
-async def check_yoomoney_payment(label: str):
+
+
+async def check_yoomoney_payment(label: str, user_id: int):
     if debug_yoomoney_mode:
         print("[DEMO] YooMoney check is always successful for label:", label)
+        await add_excel(user_id, label)
         return True  # Симуляция успешной оплаты
     else:
         headers = {
@@ -89,5 +97,48 @@ async def check_yoomoney_payment(label: str):
             except Exception as e:
                 logger.exception(f"Error while checking payment in YooMoney: {e}")
         return False
+    
+    
+async def add_excel(user_id, label):
+    # Если get_cb_for_id асинхронная функция – нужно await!
+    user_info = await DATABASE.get_cb_for_id(user_id, "users")
+    print(user_info)
+    lable_info = label.split("_")
+    product_in_order = await DATABASE.get_cb_for_id(user_id, "basket")
+    text = ""
+    summa = 0  # <= СЮДА!
+    for i, item in enumerate(product_in_order):
+        product_id = item['product']
+        quantity = item['quantity']
+        product_info = await DATABASE.get_cb_for_id(product_id, "catalog")
+        prod = product_info[0]
+        name = prod['name']
+        price = prod['price']
+        partial = int(price) * int(quantity)
+        text += f"{i + 1}. {name} - {quantity} шт. - {partial} руб.\n\n"
+        summa += partial  # <= СЮДА!
+    
+    PROJECT_ROOT = os.path.dirname(
+        os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+    excel_file_path = os.path.join(PROJECT_ROOT, 'database.xlsx')
+    print(excel_file_path)
+    fn = excel_file_path
+    
+    wb = load_workbook(fn)
 
+    if 'orders' not in wb.sheetnames:
+        wb.create_sheet('orders')
+    ws = wb['orders']
+    
+    ws.append([
+        f'{user_info[0]['address']}',
+        f'{user_info[0]['phone']}',
+        f'{lable_info[2]}',
+        f'{text}',
+        f'{summa}'
+    ])
+    wb.save(fn)
+    wb.close()
+    print(label)
+    return True
 
