@@ -63,4 +63,12 @@ def product_caption(row):
     )
 
 
+menu = InlineKeyboardMarkup(inline_keyboard=[
+    [
+        (InlineKeyboardButton(text="Каталог", callback_data=f"catalog")),
+        (InlineKeyboardButton(text="Корзина", callback_data=f"basket"))
+    ],
+])
+
+
 

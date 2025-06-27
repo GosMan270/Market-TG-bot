@@ -5,13 +5,13 @@ import os
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from dotenv import load_dotenv
-#
+
 # from router.basket import BASKET
 from src.router.router.catalog import router as catalog_router
 from src.router.router.basket import router as basket_router
 from src.router.router.payment import router as payment_router
 from src.router.controller.payment import router as payment_router_2
-
+from src.router.router.faq import router as faq_router
 
 from src.base.database import DATABASE
 from src.base.utils import check_sub
@@ -60,6 +60,7 @@ class Bot:
 		self.dispatch.include_router(catalog_router)
 		self.dispatch.include_router(payment_router)
 		self.dispatch.include_router(payment_router_2)
+		self.dispatch.include_router(faq_router)
 		self.register_handlers()
 		
 		await self.dispatch.start_polling(self.bot)
