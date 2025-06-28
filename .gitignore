@@ -91,4 +91,4 @@ desktop.ini
 # Jupyter
 .ipynb_checkpoints
 
-/Admin/admin/mysite/settings.py
+/Admin/mysite/settings.py

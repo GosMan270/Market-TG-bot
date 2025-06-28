@@ -5,7 +5,7 @@ from src.router.view.catalog import build_category_keyboard, build_subcategory_k
 from src.base.database import DATABASE
 
 
-async def basket_menu(user_id, kb=None):
+async def basket_menu(user_id, kb = None, add = None):
 	res = []
 	basket_info = await DATABASE.get_cb_for_id(user_id, "basket")
 	

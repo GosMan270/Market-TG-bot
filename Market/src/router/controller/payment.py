@@ -107,7 +107,7 @@ async def check_yoomoney_payment(callback: CallbackQuery):
                             await add_excel(user_id)
                             await callback.answer("Оплата подтверждена!")
                             await callback.message.edit_text("Оплата подтверждена!\nСпасибо за покупку!\nЗаказ можно посмотреть в корзине")
-                            return True
+                            return STrue
                 else:
                     logger.error(f"YooMoney API error: {resp.status} {await resp.text()}")
         except Exception as e:

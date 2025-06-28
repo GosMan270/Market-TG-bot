@@ -31,7 +31,6 @@ async def get_products_by_subcategory(subcategory):
 
 async def get_add_product_message(product_info, amount, basket_info, user_id):
     kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Каталог", callback_data="catalog")]])
-
     try:
         amount = int(amount)
     except ValueError:
@@ -66,6 +65,8 @@ async def get_add_product_message(product_info, amount, basket_info, user_id):
         }
     
     if in_basket:
+        if basket_info[0]['pay'] == 1:
+            await DATABASE.add_product(int(user_id), int(product_id), int(amount))
         await DATABASE.update_product(int(user_id), int(product_id), int(amount))
     else:
         await DATABASE.add_product(int(user_id), int(product_id), int(amount))

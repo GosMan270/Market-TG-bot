@@ -13,10 +13,10 @@ services:
 
   django-admin:
     build:
-      context: ./Admin/admin
+      context: ./Admin
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./Admin/admin:/app
+      - ./Admin:/app
     ports:
       - "8000:8000"
     depends_on:
