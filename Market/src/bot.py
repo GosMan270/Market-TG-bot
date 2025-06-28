@@ -32,6 +32,7 @@ class Bot:
 		self.channel_id = int(os.getenv('channel_id'))
 		self.group_id = int(os.getenv('group_id'))
 		self.link_channel = str(os.getenv('link_channel'))
+		self.link_group = str(os.getenv('link_group'))
 		
 		self.yoomoney_access_token = str(os.getenv('yoomoney_access_token'))
 		self.yoomoney_receiver = str(os.getenv('yoomoney_receiver'))
@@ -72,10 +73,7 @@ class Bot:
 			load_dotenv(dotenv_path)
 			
 			user_id = message.from_user.id
-			channel_id = int(os.getenv('channel_id'))
-			group_id = int(os.getenv('group_id'))
-			link_channel = os.getenv('link_channel')
 			print(user_id)
-			result = await check_sub(self.bot, user_id, channel_id, group_id, link_channel)
+			result = await check_sub(self.bot, user_id, self.channel_id, self.group_id, self.link_channel, self.link_group)
 			await message.answer(result)
 
